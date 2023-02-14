@@ -23,8 +23,8 @@ This is the backend for the School management system. It is built with Node.js, 
 
 ## :sparkles: ENDPOINTS ##
 
-:heavy_check_mark: /api/v1/create-student;\
-:heavy_check_mark: /api/v1/find-student/<STUDENTID>;\
+:heavy_check_mark: <storng>/api/v1/create-student</strong>;\
+:heavy_check_mark: <strong>/api/v1/find-student/<<id>></strong>/;\
 
 ## :rocket: Technologies ##
 
