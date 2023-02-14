@@ -19,7 +19,7 @@
 <br>
 
 ## :dart: About ##
-This is the backend for the School management system. It is built with Node.js, Express, and MongoDB. 
+This is the backend for the School management system. 
 
 ## :sparkles: ENDPOINTS ##
 
