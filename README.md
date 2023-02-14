@@ -23,7 +23,7 @@ This is the backend for the School management system. It is built with Node.js, 
 
 ## :sparkles: ENDPOINTS ##
 
-:heavy_check_mark: <strong>/api/v1/create-student</strong>;\
+:heavy_check_mark: <strong>/api/v1/create-student</strong>
 - <p>This endpoint takes in a body of properties : fName, lName, programme, residence</p>
 
 
