@@ -6,7 +6,7 @@ const customError = (
   res: Response,
   next: NextFunction
 ) => {
-  const statusCode = req.statusCode ? req.statusCode : 500;
+  const statusCode = err.statusCode ? err.statusCode : 500;
 
   res.status(statusCode).json({
     err: err.message,
