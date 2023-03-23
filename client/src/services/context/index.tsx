@@ -41,7 +41,7 @@ export const UserProvider = ({ children }: Props) => {
     try {
       const token = auth.getCipher();
       const response = await Axios.get<{ dbuser: Customer }>(
-        `http://localhost:5000/auth/user`,
+        `https://dcit-205-server.onrender.com/auth/user`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ export const UserProvider = ({ children }: Props) => {
   // Signup function
   const signup = async ({ username, email, password }: any, callback: any) => {
     try {
-      const response = await Axios.post(`http://localhost:5000/auth/signup`, {
+      const response = await Axios.post(`https://dcit-205-server.onrender.com/auth/signup`, {
         username,
         email,
         password,
@@ -79,7 +79,7 @@ export const UserProvider = ({ children }: Props) => {
   const login = async (userData: any, callback: any) => {
     try {
       const response = await Axios.post(
-        `http://localhost:5000/auth/signin`,
+        `https://dcit-205-server.onrender.com/auth/signin`,
         userData
       );
       const token = response.data.user.token;
