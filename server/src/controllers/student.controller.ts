@@ -12,6 +12,7 @@ const CREATE_STUDENT = async (req: Request, res: Response) => {
   }
 
   const student = new Student({
+    user: req.user.id,
     firstName: fName,
     lastName: lName,
     programme: programme,
@@ -23,13 +24,18 @@ const CREATE_STUDENT = async (req: Request, res: Response) => {
   res.status(201).json(response);
 };
 
+const GET_ALL_STUDENT = async (req: Request, res: Response) => {
+  const student = await Student.find({ user: req.user.id });
+  res.status(200).json(student);
+};
+
 const FIND_STUDENT = async (req: Request, res: Response) => {
   // take id from param
   const { id } = req.params;
   console.log(id);
 
   // find student by id
-  const student = await Student.find({_id : id});
+  const student = await Student.find({ _id: id });
 
   // if student is not found
   if (!student) {
@@ -42,4 +48,4 @@ const FIND_STUDENT = async (req: Request, res: Response) => {
   res.status(200).json(student);
 };
 
-export { CREATE_STUDENT, FIND_STUDENT };
+export { CREATE_STUDENT, FIND_STUDENT, GET_ALL_STUDENT };

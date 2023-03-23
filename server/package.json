@@ -8,16 +8,22 @@
   "dependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^18.13.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.1"
   },
   "scripts": {
-    "dev" : "nodemon ./src/server.ts",
-    "start" : "node ./dist/server.js",
-    "build" : "tsc -p ."
+    "dev": "nodemon ./src/server.ts",
+    "start": "node ./dist/server.js",
+    "build": "tsc -p ."
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.13",
+    "@types/jsonwebtoken": "^9.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }
