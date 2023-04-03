@@ -12,7 +12,6 @@ type Customer = {
 // Define the shape of the user context
 type UserContextType = {
   customer: Customer | null;
-  signup: (userData: any, callback: () => void) => Promise<void>;
   login: (userData: any, callback: () => void) => Promise<void>;
   logout: () => void;
   getUser: () => any;
@@ -22,7 +21,6 @@ type UserContextType = {
 // Create the context with initial values
 export const UserContext = createContext<UserContextType>({
   customer: null,
-  signup: async () => {},
   login: async () => {},
   logout: () => {},
   getUser: async () => {},
@@ -41,7 +39,7 @@ export const UserProvider = ({ children }: Props) => {
     try {
       const token = auth.getCipher();
       const response = await Axios.get<{ dbuser: Customer }>(
-        `https://dcit-205-server.onrender.com/auth/user`,
+        `http://localhost:5000/auth/user`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,24 +52,7 @@ export const UserProvider = ({ children }: Props) => {
     } catch (error) {
       console.log(error);
       setCustomer(null);
-    }
-  };
-
-  // Signup function
-  const signup = async ({ username, email, password }: any, callback: any) => {
-    try {
-      const response = await Axios.post(`https://dcit-205-server.onrender.com/auth/signup`, {
-        username,
-        email,
-        password,
-      });
-      console.log(response.data);
-      const { user, access_token } = response.data;
-      auth.setCipher(access_token);
-      setCustomer(user);
-      callback();
-    } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
@@ -79,7 +60,7 @@ export const UserProvider = ({ children }: Props) => {
   const login = async (userData: any, callback: any) => {
     try {
       const response = await Axios.post(
-        `https://dcit-205-server.onrender.com/auth/signin`,
+        `http://localhost:5000/auth/signin`,
         userData
       );
       const token = response.data.user.token;
@@ -89,6 +70,7 @@ export const UserProvider = ({ children }: Props) => {
     } catch (error) {
       console.log(error);
       setCustomer(null);
+      throw error;
     }
   };
 
@@ -106,7 +88,7 @@ export const UserProvider = ({ children }: Props) => {
   // Return the provider with the user context value
   return (
     <UserContext.Provider
-      value={{ login, logout, customer, signup, getUser, setCustomer }}
+      value={{ login, logout, customer, getUser, setCustomer }}
     >
       {children}
     </UserContext.Provider>

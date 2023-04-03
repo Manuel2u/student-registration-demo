@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar-vertical";
 import Navbar2 from "../components/Navbar-horizontal";
 import CreateUserModal from "../components/CreateUserModal";
 import axios from "axios";
@@ -13,7 +12,7 @@ function Create() {
   const fetchStudents = async () => {
     const token = auth.getCipher();
     const response = await axios.get(
-      "https://dcit-205-server.onrender.com/api/v1/all-students",
+      "http://localhost:5000/api/v1/all-students",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -35,7 +34,6 @@ function Create() {
   return (
     <>
       <div className="flex">
-        <Navbar />
         <div></div>
         <div className="flex flex-col pl-10 border-2  w-screen pr-16">
           <Navbar2 />

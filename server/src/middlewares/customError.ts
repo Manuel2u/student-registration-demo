@@ -12,7 +12,6 @@ const customError = (
     err: err.message,
     stack: process.env.NODE_ENV === "development" ? null : err.stack,
   });
-  next(err)
 };
 
 export default customError;

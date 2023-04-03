@@ -12,19 +12,20 @@ app.use(express.urlencoded({ extended: true }));
 const signInUser = async (info: signInInfo) => {
   try {
     const { password, email_username } = info;
+
     const user = await User.findOne({
       $or: [{ username: email_username }, { email: email_username }],
     });
 
-    if (!user) return new Error("wrong email or username");
+    if (!user) throw new Error("wrong email or username");
 
     const isPasswordmatch = await bcrypt.compare(password, user.password || "");
 
-    if (!isPasswordmatch) return new Error("wrong password");
+    if (!isPasswordmatch) throw new Error("wrong password");
 
     return user;
   } catch (error) {
-    throw new Error(`${error}`);
+    throw error;
   }
 };
 
@@ -84,11 +85,12 @@ const SIGNIN = async (req: Request, res: Response) => {
     if (!email_username || !password) {
       return res.status(401).json("Make sure all inputs are right");
     }
+
     const user = await signInUser(info);
 
-    return res.json({ user });
-  } catch (err) {
-    res.status(500).json(`${err}`);
+    return res.status(200).json({ user });
+  } catch (err: any) {
+    return res.status(401).json(err.message);
   }
 };
 

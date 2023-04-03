@@ -1,12 +1,10 @@
 import React from "react";
-import Navbar from "../components/Navbar-vertical";
 import Navbar2 from "../components/Navbar-horizontal";
 
 function Dashboard() {
   return (
     <>
       <div className="flex">
-        <Navbar />
         <div className="flex flex-col pl-10 w-screen pr-16">
           <Navbar2 />
           <div>

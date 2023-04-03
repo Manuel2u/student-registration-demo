@@ -1,9 +1,22 @@
-import React from 'react'
+import { Route, Routes, Navigate } from "react-router-dom";
+import auth from "../services/cookie-config";
 
-function ProtectedRoutes() {
+const ProtectedRoute = ({
+  component: Component,
+  path,
+}: {
+  component: any;
+  path: string;
+}) => {
+  let token = auth.getCipher();
   return (
-    <div>ProtectedRoutes</div>
-  )
-}
+    <Routes>
+      <Route
+        path={path}
+        element={!token ? <Navigate to="/signin" /> : <Component />}
+      />
+    </Routes>
+  );
+};
 
-export default ProtectedRoutes
+export default ProtectedRoute;

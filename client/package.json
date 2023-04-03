@@ -6,7 +6,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@headlessui/react": "^1.7.13",
-    "@heroicons/react": "^2.0.16",
+    "@heroicons/react": "v1",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.14",
     "@tailwindcss/aspect-ratio": "^0.4.2",
