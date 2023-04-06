@@ -64,7 +64,6 @@ const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
       current: i === index,
     }));
     setNavigation(updatedNavItems);
-    console.log(navigation);
   };
 
   return (
@@ -116,13 +115,15 @@ const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
               </Transition.Child>
               <div className="flex justify-start items-center flex-shrink-0 px-3 gap-x-2">
-                <img
-                  className="h-10 w-10 border-2 mt-2 rounded-full border-primary"
-                  src={logo}
-                  alt="Workflow"
-                />
-                <div className={"mt-2"}>
-                  <span className="text-3xl font-bold text-primary">UG</span>
+                <div className="h-12 w-12 border-2 border-primary bg-white rounded-full">
+                  <img
+                    className="h-12 p-2 w-12"
+                    src={logo}
+                    alt="Company Logo"
+                  />
+                </div>
+                <div className={""}>
+                  <span className="text-3xl font-bold  text-primary">UG</span>
                 </div>
               </div>
               <div className="mt-5 flex-1 h-0 overflow-y-auto">
@@ -167,7 +168,7 @@ const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
       <div className="hidden lg:flex lg:flex-shrink-0">
         <div
           style={{ width: "19vw" }}
-          className="flex flex-col border-r border-gray-200 pt-5 pb-4 bg-gray-100"
+          className="flex flex-col border-r border-gray-300 pt-5 pb-4"
         >
           <div className="flex justify-start items-center flex-shrink-0 px-3 gap-x-2">
             <div className="h-12 w-12 border-2 border-primary bg-white rounded-full">

@@ -9,6 +9,7 @@ import { RouteProp } from "../types";
 import routes from "../routes";
 import ProtectedRoute from "../../services/ProtectedRoutes";
 
+
 const LoadingComponent = () => {
   return (
     <>
@@ -182,12 +183,14 @@ const Layout = () => {
           </div>
         </div>
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
+
           <Suspense fallback={LoadingComponent()}>
             {routes?.map((route: RouteProp, i: number) => {
               return (
                 <Fragment key={i}>
                   <ProtectedRoute
                     component={route.component}
+                    exact={route.exact}
                     path={route.path}
                   />
                 </Fragment>

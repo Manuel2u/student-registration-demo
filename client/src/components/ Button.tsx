@@ -25,7 +25,7 @@ const Button = ({
         className={`${
           className
             ? className
-            : "text-white bg-blue-600 hover:bg-blue-700 focus:ring-offset-2 focus:ring-blue-700 flex w-full justify-center py-2 px-4 rounded-md border border-transparent shadow-sm text-sm font-medium focus:outline-none"
+            : "text-white bg-blue-600 hover:bg-blue-700 focus:ring-offset-2 focus:ring-blue-700 flex w-full justify-center py-2  rounded-md border border-transparent shadow-sm text-sm font-medium focus:outline-none"
         }  disabled:text-white disabled:bg-gray-200 `}
       >
         {loading ? (

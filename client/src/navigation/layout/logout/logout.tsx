@@ -2,7 +2,7 @@
 import { LogoutIcon } from "@heroicons/react/outline";
 import { XIcon } from "@heroicons/react/solid";
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import AlertBase from "../../../components/modals/alert";
 import type { LogoutProps } from "./types";
 import { useUserAuth } from "../../../services/context";
@@ -10,14 +10,14 @@ import { toast } from "react-hot-toast";
 // import { AuthContext } from "@services/context";
 
 const Logout: FC<LogoutProps> = ({ show, setShow }) => {
-  const navigate = useNavigate();
+  const { push } = useHistory();
 
   const { logout } = useUserAuth();
 
   const onClick = () => {
     try {
       logout();
-      navigate("/signin");
+      push("/login");
       setShow(false);
     } catch (err: any) {
       toast.error(err.response.message);

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+const logo = require("../assets/uglogo.png");
 
 export default function NotFound() {
   return (
@@ -9,7 +10,9 @@ export default function NotFound() {
           <div className="flex flex-shrink-0 justify-center">
             <a href="/" className="inline-flex">
               <span className="sr-only">Your Company</span>
-              <img className="h-12 w-auto" src="" alt="Company Logo" />
+              <div className="h-12 w-12 border-2 border-primary bg-white rounded-full">
+                <img className="h-12 p-2 w-12" src={logo} alt="Company Logo" />
+              </div>{" "}
             </a>
           </div>
           <div className="py-16">
@@ -36,7 +39,7 @@ export default function NotFound() {
         <footer className="mx-auto w-full max-w-7xl flex-shrink-0 px-4 sm:px-6 lg:px-8">
           <nav className="flex justify-center space-x-4">
             <Link
-              to="#"
+              to="/"
               className="text-sm font-medium text-gray-500 hover:text-gray-600"
             >
               Contact Support
@@ -46,7 +49,7 @@ export default function NotFound() {
               aria-hidden="true"
             />
             <Link
-              to="#"
+              to="/"
               className="text-sm font-medium text-gray-500 hover:text-gray-600"
             >
               Status
@@ -56,7 +59,7 @@ export default function NotFound() {
               aria-hidden="true"
             />
             <Link
-              to="#"
+              to="/"
               className="text-sm font-medium text-gray-500 hover:text-gray-600"
             >
               Twitter

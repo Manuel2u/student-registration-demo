@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useUserAuth } from "../services/context";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { DASHBOARD } from "../constants/page-paths";
 
@@ -22,8 +22,8 @@ export default function SignIn() {
     setPassword(value);
   };
 
-  const navigate = useNavigate();
-  const { login, getUser, setCustomer } = useUserAuth();
+  const { push } = useHistory();
+  const { login, getUser } = useUserAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,8 +33,7 @@ export default function SignIn() {
     try {
       await login({ email_username, password }, async () => {
         const { dbuser } = await getUser();
-        await setCustomer(dbuser);
-        navigate(DASHBOARD);
+        push(DASHBOARD);
 
         toast.success(`Signed in as ${dbuser.username}`);
       });
@@ -46,8 +45,7 @@ export default function SignIn() {
       // Handle other errors
       // setError(error.response.data);
 
-      navigate("/signin");
-      console.log(error);
+      push("/signin");
     }
   };
 
@@ -70,14 +68,10 @@ export default function SignIn() {
         style={bgImgstyle}
         className="flex min-h-screen flex-col justify-center py-24 sm:px-6 lg:px-8 bg-opacity-70 bg-black relative w-full h-full inset-0"
       >
-        <div className="bg-black bg-opacity-70 h-full w-full absolute top-0 left-0 z-10">
-          <div className="flex items-center pt-28 gap-x-2 justify-center sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-black bg-opacity-70  h-full w-full absolute top-0 left-0 z-10">
+          <div className="flex items-center sm:pt-16 md:pt-28 gap-x-2 justify-center sm:mx-auto sm:w-full sm:max-w-md">
             <div className="h-12 w-12 border-2 border-primary bg-white rounded-full">
-              <img
-                className="h-12 p-2 w-12"
-                src={logo}
-                alt="Company Logo"
-              />
+              <img className="h-12 p-2 w-12" src={logo} alt="Company Logo" />
             </div>
             <div className="flex flex-col items-center justify-center">
               <h2 className="text-3xl font-bold tracking-tight text-white">
@@ -89,8 +83,8 @@ export default function SignIn() {
             </div>
           </div>
 
-          <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative">
-            <div className="bg-white bg-opacity-80 py-8 px-4 shadow  sm:px-10">
+          <div className="mt-8 sm:mx-auto sm:w-[90%] sm:h-[50%] md:max-w-md relative">
+            <div className="bg-white bg-opacity-80 py-8 px-4 shadow  sm:px-16 md:px-10">
               <div className="text-center mb-5">
                 <h2 className="font-bold text-center text-2xl">
                   Welcome Back!
@@ -161,7 +155,7 @@ export default function SignIn() {
 
                 <div className="w-full">
                   <Button
-                    className="flex w-full justify-center border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-tertiary focus:ring-offset-2"
+                    className="flex w-full justify-center border border-transparent bg-primary py-2  text-sm font-medium text-white shadow-sm hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-tertiary focus:ring-offset-2"
                     colspan={2}
                     label="Sign In"
                     loading={loading}

@@ -39,7 +39,7 @@ export const UserProvider = ({ children }: Props) => {
     try {
       const token = auth.getCipher();
       const response = await Axios.get<{ dbuser: Customer }>(
-        `http://localhost:5000/auth/user`,
+        `https://student-registration-qq6n.onrender.com/auth/user`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,8 +49,7 @@ export const UserProvider = ({ children }: Props) => {
       const { dbuser } = response.data;
       setCustomer(dbuser);
       return { dbuser };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
       setCustomer(null);
       throw error;
     }
@@ -60,15 +59,15 @@ export const UserProvider = ({ children }: Props) => {
   const login = async (userData: any, callback: any) => {
     try {
       const response = await Axios.post(
-        `http://localhost:5000/auth/signin`,
+        `https://student-registration-qq6n.onrender.com/auth/signin`,
         userData
       );
       const token = response.data.user.token;
       auth.setCipher(token);
       setCustomer(null);
       callback();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      alert(error.response.data);
       setCustomer(null);
       throw error;
     }

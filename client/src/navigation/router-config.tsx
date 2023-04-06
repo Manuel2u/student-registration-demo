@@ -1,9 +1,8 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { CenterLoader } from "../utils/loaders";
-// import Dashboard from "../pages/Dashboard";
-// import Create from "../pages/Create-User";
 import NotFound from "../components/NotFound";
+import { LOGIN, MAIN_LAYOUT } from "../constants/page-paths";
 
 const SignIn = React.lazy(() => import("../pages/SignIn"));
 const Layout = React.lazy(() => import("../navigation/layout/main-layout"));
@@ -13,13 +12,11 @@ function RouterConfig() {
     <React.Fragment>
       <BrowserRouter>
         <React.Suspense fallback={CenterLoader()}>
-          <Routes>
-            <Route path="signin" element={<SignIn />} />
-            <Route path="*" element={<Layout />} />
-            {/* <Route path="dashboard" element={<Dashboard />} />
-            <Route path="create-user" element={<Create />} /> */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Switch>
+            <Route exact={true} path={LOGIN} component={SignIn} />
+            <Route path={MAIN_LAYOUT} component={Layout} />
+            <Route component={NotFound} />
+          </Switch>
         </React.Suspense>
       </BrowserRouter>
     </React.Fragment>

@@ -3,15 +3,19 @@ import type { RouteProp } from "./types";
 import { DASHBOARD, CREATE_STUDENT } from "../constants/page-paths";
 
 const Dashboard = lazy(() => import("../pages/Dashboard"));
-const Create_Studnet = lazy(() => import("../pages/Create-User"));
+const Create_Student = lazy(() => import("../pages/Create-User"));
 
 const routes: RouteProp[] = [
   {
+    exact : true,
     component: Dashboard,
+    index:true,
     path: DASHBOARD,
   },
   {
-    component: Create_Studnet,
+    exact : true,
+    component: Create_Student,
+    index:false,
     path: CREATE_STUDENT,
   },
 ];

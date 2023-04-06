@@ -1,21 +1,30 @@
-import { Route, Routes, Navigate } from "react-router-dom";
-import auth from "../services/cookie-config";
+import { Fragment } from "react";
+import { Route, Redirect } from "react-router-dom";
+import auth from "./cookie-config";
 
 const ProtectedRoute = ({
   component: Component,
   path,
+  exact,
 }: {
   component: any;
   path: string;
+  exact: boolean;
 }) => {
-  let token = auth.getCipher();
   return (
-    <Routes>
+    <Fragment>
       <Route
         path={path}
-        element={!token ? <Navigate to="/signin" /> : <Component />}
+        exact={exact}
+        render={() => {
+          let token = auth.getCipher();
+          if (!token) {
+            return <Redirect to={{ pathname: "/login" }} />;
+          }
+          return <Component />;
+        }}
       />
-    </Routes>
+    </Fragment>
   );
 };
 
