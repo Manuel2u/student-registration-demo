@@ -6,7 +6,7 @@
   <!-- <a href="https://dcit_205_mini_project.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">DCIT_205_MINI_PROJECT</h1>
+<h1 align="center">School_Registration_Demo</h1>
 
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{YOUR_GITHUB_USERNAME}}/dcit_205_mini_project?color=56BEB8">
