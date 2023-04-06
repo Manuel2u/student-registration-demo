@@ -96,14 +96,17 @@ const SIGNIN = async (req: Request, res: Response) => {
 
 // get the logged in user details
 const GET_USER_DETAILS = async (req: any, res: any) => {
-  console.log(req.user.id);
-  User.findOne({ _id: req.user.id }).then((dbuser: any) => {
-    if (!dbuser) {
-      return res.status(404).json({ usernotfound: "User not found" });
-    } else {
-      res.status(200).json({ dbuser });
-    }
-  });
+  try {
+    User.findOne({ _id: req.user.id }).then((dbuser: any) => {
+      if (!dbuser) {
+        return res.status(404).json({ usernotfound: "User not found" });
+      } else {
+        res.status(200).json({ dbuser });
+      }
+    });
+  } catch (err) {
+    res.status(401).json(err);
+  }
 };
 
 export { SIGNUP, SIGNIN, GET_USER_DETAILS };

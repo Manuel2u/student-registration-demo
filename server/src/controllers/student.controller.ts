@@ -3,9 +3,9 @@ import { Response, Request } from "express";
 
 //create a new student
 const CREATE_STUDENT = async (req: Request, res: Response) => {
-  const { fName, lName, programme, residence } = req.body;
+  const { studentID, programme, name, email, contact, residence } = req.body;
 
-  if (!fName || !lName || !programme || !residence) {
+  if (!studentID || !name || !programme || !email || !residence || !contact) {
     res.status(500).json({
       err: "make sure all fields are correct",
     });
@@ -13,10 +13,13 @@ const CREATE_STUDENT = async (req: Request, res: Response) => {
 
   const student = new Student({
     user: req.user.id,
-    firstName: fName,
-    lastName: lName,
-    programme: programme,
-    residence: residence,
+
+    studentID,
+    name,
+    contact,
+    programme,
+    email,
+    residence,
   });
 
   const response = await student.save();
@@ -32,7 +35,6 @@ const GET_ALL_STUDENT = async (req: Request, res: Response) => {
 const FIND_STUDENT = async (req: Request, res: Response) => {
   // take id from param
   const { id } = req.params;
-  console.log(id);
 
   // find student by id
   const student = await Student.find({ _id: id });

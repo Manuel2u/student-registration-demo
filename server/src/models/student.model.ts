@@ -5,11 +5,7 @@ const studentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
+  studentID: {
     type: String,
     required: true,
   },
@@ -17,10 +13,22 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  contact: {
+    type: String,
+    required: true,
+  },
+  email : {
+    type : String,
+    required : true
+  },
   residence: {
     type: String,
     required: true,
   },
 });
 
-export default mongoose.model("Studnet", studentSchema);
+export default mongoose.model("Student", studentSchema);

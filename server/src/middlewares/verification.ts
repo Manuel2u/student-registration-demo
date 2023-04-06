@@ -13,7 +13,6 @@ export const verifyAccessToken = async (
 ) => {
   let token;
   try {
-    console.log(req.headers["authorization"]);
     token = req.headers.authorization?.split(" ")[1];
     const decoded: any = await jwt.verify(
       token || "",
@@ -24,10 +23,9 @@ export const verifyAccessToken = async (
       return res.status(401).json({ message: "Token Expired" });
     }
     req.user = decoded;
-    console.log(req.user.id);
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Unauthorized Access" });
+    return res.status(401).json(err);
   }
   if (!token) {
     // CreateError("No token", 403);
