@@ -16,7 +16,7 @@
     "mongoose": "^6.9.1"
   },
   "engines": {
-    "node": ">=14.20.1"
+    "node": ">=16.20.1"
   },
   "scripts": {
     "dev": "nodemon ./src/server.ts",
