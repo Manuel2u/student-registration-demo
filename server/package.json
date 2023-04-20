@@ -15,9 +15,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.1"
   },
-  "engines": {
-    "node": ">=14.20.1"
-  },
+
   "scripts": {
     "dev": "nodemon ./src/server.ts",
     "start": "node ./dist/server.js",
