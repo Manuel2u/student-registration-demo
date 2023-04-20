@@ -20,7 +20,7 @@ function Create() {
   const fetchStudents = async () => {
     const token = auth.getCipher();
     const response = await axios.get(
-      "https://student-registration-qq6n.onrender.com/api/v1/all-students",
+      "https://dcit-205-server.onrender.com/api/v1/all-students",
       {
         headers: {
           Authorization: `Bearer ${token}`,

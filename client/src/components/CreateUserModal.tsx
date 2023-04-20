@@ -47,7 +47,7 @@ function CreateUserModal({ visible, onClose }: any) {
   //   try {
   //     const token = auth.getCipher();
   //     const response = await Axios.post(
-  //       "https://student-registration-qq6n.onrender.com/api/v1/create-student",
+  //       "https://dcit-205-server.onrender.com/api/v1/create-student",
   //       {
   //         fName: firstName,
   //         lName: lastName,
