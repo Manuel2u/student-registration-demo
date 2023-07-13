@@ -1,5 +1,7 @@
 // importing packages and modules
 import express from "express";
+import cookieParser from "cookie-parser";
+
 import cors from "cors";
 const app = express();
 import dotenv from "dotenv";
@@ -12,20 +14,24 @@ const PORT = process.env.PORT || 5000;
 import userRoutes from "./routes/user";
 import studentRoutes from "./routes/student";
 
+
 //use cors
-app.use(cors());
+app.use(cors({credentials: true, origin:true}));
+
 
 //use express json
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-//use global middlewares
-app.use(customError);
 
 //routes
 app.use("/auth", userRoutes);
 
 app.use("/api/v1", studentRoutes);
+
+//use error middleware
+app.use(customError);
+
 
 //connect db and listen on port
 app.listen(PORT, async () => {

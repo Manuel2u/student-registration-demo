@@ -1,18 +1,19 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
 const GENERATE_TOKEN = (user: any) => {
   //   Create access token
-  const access_token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "Dodoo123#", {
-    expiresIn: "1d", // 1 day
-  });
-  //   Create refresh token
-  const refresh_token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "Dodoo123#", {
-    expiresIn: "30d", // 30 days
-  });
+  const token = jwt.sign(
+    { id: user._id },
+    process.env.JWT_SECRET || "",
+    {
+      expiresIn: "20s", // 1 day
+    }
+  );
+  
 
-  return { access_token, refresh_token };
+  return { token };
 };
 
 export default GENERATE_TOKEN;

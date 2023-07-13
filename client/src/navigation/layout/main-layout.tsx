@@ -1,4 +1,4 @@
-import { Fragment, Suspense, useState } from "react";
+import { Fragment, Suspense, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { MenuAlt1Icon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
@@ -8,8 +8,12 @@ import { CenterLoader } from "../../utils/loaders/index";
 import { RouteProp } from "../types";
 import routes from "../routes";
 import ProtectedRoute from "../../services/ProtectedRoutes";
-
-
+import { useUserAuth } from "../../services/context";
+import { getUser } from "../../utils/auth";
+import { useHistory, useLocation } from "react-router-dom";
+import auth from "../../services/cookie-config";
+import { AxiosHeaders } from "axios";
+import Axios from "axios";
 const LoadingComponent = () => {
   return (
     <>
@@ -18,8 +22,46 @@ const LoadingComponent = () => {
   );
 };
 
+const token: string | null = auth.getCipher();
+console.log(token);
+
+(Axios.defaults.headers.common as AxiosHeaders)[
+  "Authorization"
+] = `Bearer ${token}`;
+
 const Layout = () => {
+  const location = useLocation();
+  const history = useHistory();
+
+  useEffect(() => {
+    const foundRoute = routes.find((route) => {
+      return route.path === location.pathname;
+    });
+
+    if (!foundRoute) {
+      history.push("/notfound");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { dispatch } = useUserAuth();
+
+  async function fetchUser() {
+    try {
+      await getUser((user: any) => {
+        dispatch({ type: "GET_USER", user: user });
+      });
+    } catch (err: any) {
+      throw err;
+    }
+  }
+
+  useEffect(() => {
+    // const access_token: any = auth.getCipher() as any
+    fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="relative h-screen flex overflow-hidden bg-white">
@@ -183,7 +225,6 @@ const Layout = () => {
           </div>
         </div>
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
-
           <Suspense fallback={LoadingComponent()}>
             {routes?.map((route: RouteProp, i: number) => {
               return (

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useUserAuth } from "../services/context";
+import { useUserAuth } from "../../services/context";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { DASHBOARD } from "../constants/page-paths";
+import { DASHBOARD } from "../../constants/page-paths";
+import { login } from "../../utils/auth";
+import Button from "../../components/ Button";
 
-import Button from "../components/ Button";
-
-const logo = require("../assets/uglogo.png");
+const logo = require("../../assets/uglogo.png");
 
 export default function SignIn() {
   const [email_username, setEmail] = useState("");
@@ -23,7 +23,7 @@ export default function SignIn() {
   };
 
   const { push } = useHistory();
-  const { login, getUser } = useUserAuth();
+  const { state, dispatch } = useUserAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,21 +31,20 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      await login({ email_username, password }, async () => {
-        const { dbuser } = await getUser();
+      await login({ email_username, password }, async (user: any) => {
+        console.log(user);
+        dispatch({ type: "LOGIN_USER", user: user });
+        console.log(state);
         push(DASHBOARD);
-
-        toast.success(`Signed in as ${dbuser.username}`);
+        toast.success(`Signed in as ${user.username}`);
+        console.log(state);
       });
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
-
-      toast.error(` ${error.response.data}`);
-      // Handle other errors
-      // setError(error.response.data);
-
-      push("/signin");
+      console.log(error);
+      toast.error(` ${error.response.data.err}`);
+      push("/login");
     }
   };
 

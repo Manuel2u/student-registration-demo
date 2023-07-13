@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import dotenv from "dotenv"
+dotenv.config()
 
 const customError = (
   err: any,
@@ -10,7 +12,7 @@ const customError = (
 
   res.status(statusCode).json({
     err: err.message,
-    stack: process.env.NODE_ENV === "development" ? null : err.stack,
+    stack: process.env.NODE_ENV === "development" ? err.stack : null
   });
 };
 

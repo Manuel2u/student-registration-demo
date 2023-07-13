@@ -1,57 +1,20 @@
 import User from "../models/user.model";
 import bcrypt from "bcryptjs";
-import express from "express";
+import express, { NextFunction } from "express";
 const app = express();
 app.use(express.json());
 import GENERATE_TOKEN from "../utils/token/token";
 import { Request, Response } from "express";
-import { signInInfo, signUpInfo } from "../types";
+import dotenv from "dotenv";
+import createError from "../utils/Error";
+dotenv.config();
 
-app.use(express.urlencoded({ extended: true }));
-
-const signInUser = async (info: signInInfo) => {
-  try {
-    const { password, email_username } = info;
-
-    const user = await User.findOne({
-      $or: [{ username: email_username }, { email: email_username }],
-    });
-
-    if (!user) throw new Error("wrong email or username");
-
-    const isPasswordmatch = await bcrypt.compare(password, user.password || "");
-
-    if (!isPasswordmatch) throw new Error("wrong password");
-
-    return user;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const signUpUser = async (info: signUpInfo) => {
-  const hash = await bcrypt.hash(info.password, 10);
-  if (!hash) {
-    throw new Error(`there was an error signing user up`);
-  }
-
-  const user = new User({
-    username: info.username,
-    email: info.email,
-    password: hash,
-  });
-
-  const savedUser = await user.save();
-  return savedUser;
-};
-
-const SIGNUP = async (req: Request, res: Response) => {
+const SIGNUP = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { username, email, password } = req.body;
-    const info = { email, username, password };
 
     if (!email || !username || !password) {
-      return res.status(400).json("Make sure all inputs are valid");
+      createError("Make sure all inputs fields are right", 400);
     }
 
     const alreadyExistingUser = await User.findOne({
@@ -59,53 +22,91 @@ const SIGNUP = async (req: Request, res: Response) => {
     });
 
     if (alreadyExistingUser) {
-      return res.status(500).json("User already exists");
+      createError("user already exists", 401);
     }
 
-    const user = await signUpUser(info);
-    const { access_token, refresh_token } = GENERATE_TOKEN(user);
-    user.token = refresh_token;
+    const hash = await bcrypt.hash(password, 10);
 
-    await user.save();
+    if (!hash) {
+      createError("there was an error signing user up", 401);
+    }
 
-    return res.json({
-      user,
-      access_token,
+    const _user = new User({
+      username: username,
+      email: email,
+      password: hash,
     });
-  } catch (err) {
-    res.status(500).json(`${err}`);
+
+    const user = await _user.save();
+
+    return res.status(200).json({
+      user,
+    });
+  } catch (err: any) {
+    next(createError(err, 500));
   }
 };
 
-const SIGNIN = async (req: Request, res: Response) => {
+const SIGNIN = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email_username, password } = req.body;
-    const info = { email_username, password };
 
     if (!email_username || !password) {
-      return res.status(401).json("Make sure all inputs are right");
+      next(createError("Make sure all Inputs are right", 400));
     }
 
-    const user = await signInUser(info);
+    const user_found = await User.findOne({
+      $or: [{ username: email_username }, { email: email_username }],
+    });
 
-    return res.status(200).json({ user });
+    if (!user_found) {
+      next(createError("Account not found", 404));
+    } else {
+      const isPasswordmatch = await bcrypt.compare(
+        password,
+        user_found?.password || ""
+      );
+
+      if (!isPasswordmatch) next(createError("wrong password", 400));
+
+      const { token } = GENERATE_TOKEN(user_found);
+      user_found.token = token;
+
+      await user_found.save();
+
+      const { _id, email, username } = user_found;
+
+      const user = {
+        _id,
+        email,
+        username,
+        token,
+      };
+
+      return res.json({ user });
+    }
   } catch (err: any) {
-    return res.status(401).json(err.message);
+    next(createError(err, 400));
   }
 };
 
 // get the logged in user details
-const GET_USER_DETAILS = async (req: any, res: any) => {
+const GET_USER_DETAILS = async (req: any, res: any, next: any) => {
   try {
-    User.findOne({ _id: req.user.id }).then((dbuser: any) => {
-      if (!dbuser) {
-        return res.status(404).json({ usernotfound: "User not found" });
-      } else {
-        res.status(200).json({ dbuser });
-      }
-    });
-  } catch (err) {
-    res.status(401).json(err);
+    const user_1: any = await User.findOne({ _id: req.user.id });
+    if (!user_1) {
+      next(createError("user not found", 404));
+    }
+
+    const { _id, username, email } = user_1?._doc;
+    const user = {
+      _id,
+      username,
+      email,
+    };
+    return res.status(200).json({ user });
+  } catch (err: any) {
+    next(createError(err, 401));
   }
 };
 

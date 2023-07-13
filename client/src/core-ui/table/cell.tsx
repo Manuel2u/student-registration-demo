@@ -261,6 +261,7 @@ const TableCell = ({ colItem, data }: TableCellPropTypes) => {
           <div className={` h-full font-light inline-flex`} key={idx}>
             {rowItem["action"]?.type === "link" ? (
               <Link
+              key={idx}
                 title={rowItem.action?.title}
                 to={`${rowItem.action?.href}`}
                 className="w-8 h-8 ml-0.5 mb-0.5 inline-flex border border-grey-500 items-center justify-center rounded-full bg-transparent hover:bg-blue-200"

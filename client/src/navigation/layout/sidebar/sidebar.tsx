@@ -1,4 +1,4 @@
-import { Fragment, SetStateAction, useEffect, useState } from "react";
+import { Fragment, SetStateAction,  useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { UserCircleIcon, HomeIcon, XIcon } from "@heroicons/react/outline";
@@ -12,7 +12,6 @@ import { FiLogOut } from "react-icons/fi";
 
 import { Link, useLocation } from "react-router-dom";
 import { useUserAuth } from "../../../services/context";
-import { toast } from "react-hot-toast";
 
 const logo = require("../../../assets/uglogo.png");
 const male = require("../../../assets/male.jpeg");
@@ -25,8 +24,6 @@ interface Props {
 const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
   const { pathname } = useLocation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
-  const { getUser } = useUserAuth();
 
   const [navigation, setNavigation] = useState([
     {
@@ -43,20 +40,8 @@ const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
     },
   ]);
 
-  const [user, setUser]: any = useState(null);
-
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const { dbuser } = await getUser();
-        await setUser(dbuser);
-      } catch (err) {
-        toast.error("There was an error getting current user");
-      }
-    }
-
-    fetchUser();
-  }, [getUser]);
+  const { state } = useUserAuth();
+  console.log(state);
 
   const handleItemClick = (index: any) => {
     const updatedNavItems = navigation.map((item, i) => ({
@@ -222,10 +207,12 @@ const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                     alt="profile"
                   />
                   <div>
-                    <p className="text-sm">{user?.username}</p>
-                    <p className="text-sm text-gray-600">
-                      {user?.email.substring(0, 17)}...
-                    </p>
+                    <p className="text-sm">{state.user?.username}</p>
+                    {typeof state.user?.email === "string" && (
+                      <p className="text-sm text-gray-600">
+                        {state.user.email.substring(0, 17)}...
+                      </p>
+                    )}
                   </div>
                   <div onClick={() => setShowLogoutModal(true)}>
                     <FiLogOut size={20} color="#9E9E9E" />

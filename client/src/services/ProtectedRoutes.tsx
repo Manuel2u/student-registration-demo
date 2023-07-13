@@ -17,7 +17,8 @@ const ProtectedRoute = ({
         path={path}
         exact={exact}
         render={() => {
-          let token = auth.getCipher();
+          const token = auth.getCipher();
+          // console.log(token)
           if (!token) {
             return <Redirect to={{ pathname: "/login" }} />;
           }

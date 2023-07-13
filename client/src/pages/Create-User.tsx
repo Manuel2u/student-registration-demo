@@ -4,7 +4,6 @@ import CreateUserModal from "../components/CreateUserModal";
 import axios from "axios";
 import ListTableComponent from "../components/list-table";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import auth from "../services/cookie-config";
 import { colPropType } from "../core-ui/table/types";
 
 function Create() {
@@ -18,23 +17,22 @@ function Create() {
   const [search, setSearch] = useState("");
 
   const fetchStudents = async () => {
-    const token = auth.getCipher();
-    const response = await axios.get(
-      "https://dcit-205-server.onrender.com/api/v1/all-students",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    setLoading(false);
-    await setStudents(response.data);
+    try {
+      setLoading(true);
+      const response = await axios.get("api/v1/all-students");
+      setLoading(false);
+      setStudents(response.data);
+    } catch (err: any) {
+      setLoading(false);
+      console.log(err);
+      throw err;
+    }
   };
 
   //fetch students on page load
   useEffect(() => {
     fetchStudents();
-  }, [students]);
+  }, []);
 
   const cols: colPropType[] = [
     {

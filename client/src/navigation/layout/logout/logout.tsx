@@ -7,19 +7,22 @@ import AlertBase from "../../../components/modals/alert";
 import type { LogoutProps } from "./types";
 import { useUserAuth } from "../../../services/context";
 import { toast } from "react-hot-toast";
+import { logout } from "../../../utils/auth";
 // import { AuthContext } from "@services/context";
 
 const Logout: FC<LogoutProps> = ({ show, setShow }) => {
   const { push } = useHistory();
 
-  const { logout } = useUserAuth();
+  const { dispatch } = useUserAuth();
 
   const onClick = () => {
     try {
       logout();
+      dispatch({ type: "LOGOUT" });
       push("/login");
       setShow(false);
     } catch (err: any) {
+      console.log(err)
       toast.error(err.response.message);
     }
   };

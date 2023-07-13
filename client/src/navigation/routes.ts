@@ -1,22 +1,32 @@
 import { lazy } from "react";
 import type { RouteProp } from "./types";
-import { DASHBOARD, CREATE_STUDENT } from "../constants/page-paths";
+import {
+  DASHBOARD,
+  CREATE_STUDENT,
+} from "../constants/page-paths";
 
-const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 const Create_Student = lazy(() => import("../pages/Create-User"));
+const NotFound = lazy(() => import("../components/NotFound"));
 
 const routes: RouteProp[] = [
   {
-    exact : true,
+    exact: true,
     component: Dashboard,
-    index:true,
+    index: true,
     path: DASHBOARD,
   },
   {
-    exact : true,
+    exact: true,
     component: Create_Student,
-    index:false,
+    index: true,
     path: CREATE_STUDENT,
+  },
+  {
+    exact: true,
+    component: NotFound,
+    index: true,
+    path: "/notfound", // Match any path that hasn't been defined above
   },
 ];
 

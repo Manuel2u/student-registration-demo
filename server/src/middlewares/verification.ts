@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
 import { Request, Response, NextFunction } from "express";
+import dotenv from "dotenv";
+import createError from "../utils/Error";
+dotenv.config();
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -14,21 +17,24 @@ export const verifyAccessToken = async (
   let token;
   try {
     token = req.headers.authorization?.split(" ")[1];
-    const decoded: any = await jwt.verify(
-      token || "",
-      process.env.JWT_SECRET || "Dodoo123#"
+    console.log(token);
+
+    jwt.verify(
+      token,
+      process.env.JWT_SECRET,
+      function (err: any, decoded: any) {
+        if (err) {
+          next(createError("Token expired", 401));
+        }
+        req.user = decoded;
+      }
     );
-    // check expiry
-    if (decoded.exp < Date.now() / 1000) {
-      return res.status(401).json({ message: "Token Expired" });
-    }
-    req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json(err);
+    next(createError("Invalid access token", 401));
   }
+
   if (!token) {
-    // CreateError("No token", 403);
-    throw new Error("Unauthorized Access ");
+    next(createError("No token", 401));
   }
 };
