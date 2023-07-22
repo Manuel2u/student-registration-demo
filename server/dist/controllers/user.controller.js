@@ -19,93 +19,91 @@ const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 const token_1 = __importDefault(require("../utils/token/token"));
-app.use(express_1.default.urlencoded({ extended: true }));
-const signInUser = (info) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { password, email_username } = info;
-        const user = yield user_model_1.default.findOne({
-            $or: [{ username: email_username }, { email: email_username }],
-        });
-        if (!user)
-            throw new Error("wrong email or username");
-        const isPasswordmatch = yield bcryptjs_1.default.compare(password, user.password || "");
-        if (!isPasswordmatch)
-            throw new Error("wrong password");
-        return user;
-    }
-    catch (error) {
-        throw error;
-    }
-});
-const signUpUser = (info) => __awaiter(void 0, void 0, void 0, function* () {
-    const hash = yield bcryptjs_1.default.hash(info.password, 10);
-    if (!hash) {
-        throw new Error(`there was an error signing user up`);
-    }
-    const user = new user_model_1.default({
-        username: info.username,
-        email: info.email,
-        password: hash,
-    });
-    const savedUser = yield user.save();
-    return savedUser;
-});
-const SIGNUP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const dotenv_1 = __importDefault(require("dotenv"));
+const Error_1 = __importDefault(require("../utils/Error"));
+dotenv_1.default.config();
+const SIGNUP = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, email, password } = req.body;
-        const info = { email, username, password };
         if (!email || !username || !password) {
-            return res.status(400).json("Make sure all inputs are valid");
+            (0, Error_1.default)("Make sure all inputs fields are right", 400);
         }
         const alreadyExistingUser = yield user_model_1.default.findOne({
             $or: [{ email }, { username }],
         });
         if (alreadyExistingUser) {
-            return res.status(500).json("User already exists");
+            (0, Error_1.default)("user already exists", 401);
         }
-        const user = yield signUpUser(info);
-        const { access_token, refresh_token } = (0, token_1.default)(user);
-        user.token = refresh_token;
-        yield user.save();
-        return res.json({
+        const hash = yield bcryptjs_1.default.hash(password, 10);
+        if (!hash) {
+            (0, Error_1.default)("there was an error signing user up", 401);
+        }
+        const _user = new user_model_1.default({
+            username: username,
+            email: email,
+            password: hash,
+        });
+        const user = yield _user.save();
+        return res.status(200).json({
             user,
-            access_token,
         });
     }
     catch (err) {
-        res.status(500).json(`${err}`);
+        next((0, Error_1.default)(err, 500));
     }
 });
 exports.SIGNUP = SIGNUP;
-const SIGNIN = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const SIGNIN = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email_username, password } = req.body;
-        const info = { email_username, password };
         if (!email_username || !password) {
-            return res.status(401).json("Make sure all inputs are right");
+            next((0, Error_1.default)("Make sure all Inputs are right", 400));
         }
-        const user = yield signInUser(info);
-        return res.status(200).json({ user });
+        const user_found = yield user_model_1.default.findOne({
+            $or: [{ username: email_username }, { email: email_username }],
+        });
+        if (!user_found) {
+            next((0, Error_1.default)("Account not found", 404));
+        }
+        else {
+            const isPasswordmatch = yield bcryptjs_1.default.compare(password, (user_found === null || user_found === void 0 ? void 0 : user_found.password) || "");
+            if (!isPasswordmatch)
+                next((0, Error_1.default)("wrong password", 400));
+            const { token } = (0, token_1.default)(user_found);
+            user_found.token = token;
+            yield user_found.save();
+            const { _id, email, username } = user_found;
+            const user = {
+                _id,
+                email,
+                username,
+                token,
+            };
+            return res.json({ user });
+        }
     }
     catch (err) {
-        return res.status(401).json(err.message);
+        next((0, Error_1.default)(err, 400));
     }
 });
 exports.SIGNIN = SIGNIN;
 // get the logged in user details
-const GET_USER_DETAILS = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const GET_USER_DETAILS = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        user_model_1.default.findOne({ _id: req.user.id }).then((dbuser) => {
-            if (!dbuser) {
-                return res.status(404).json({ usernotfound: "User not found" });
-            }
-            else {
-                res.status(200).json({ dbuser });
-            }
-        });
+        const user_1 = yield user_model_1.default.findOne({ _id: req.user.id });
+        if (!user_1) {
+            next((0, Error_1.default)("user not found", 404));
+        }
+        const { _id, username, email } = user_1 === null || user_1 === void 0 ? void 0 : user_1._doc;
+        const user = {
+            _id,
+            username,
+            email,
+        };
+        return res.status(200).json({ user });
     }
     catch (err) {
-        res.status(401).json(err);
+        next((0, Error_1.default)(err, 401));
     }
 });
 exports.GET_USER_DETAILS = GET_USER_DETAILS;

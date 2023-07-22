@@ -8,28 +8,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAccessToken = void 0;
 const jwt = require("jsonwebtoken");
+const dotenv_1 = __importDefault(require("dotenv"));
+const Error_1 = __importDefault(require("../utils/Error"));
+dotenv_1.default.config();
 const verifyAccessToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     let token;
     try {
         token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
-        const decoded = yield jwt.verify(token || "", process.env.JWT_SECRET || "Dodoo123#");
-        // check expiry
-        if (decoded.exp < Date.now() / 1000) {
-            return res.status(401).json({ message: "Token Expired" });
-        }
-        req.user = decoded;
+        console.log(token);
+        jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+            if (err) {
+                next((0, Error_1.default)("Token expired", 401));
+            }
+            req.user = decoded;
+        });
         next();
     }
     catch (err) {
-        return res.status(401).json(err);
+        next((0, Error_1.default)("Invalid access token", 401));
     }
     if (!token) {
-        // CreateError("No token", 403);
-        throw new Error("Unauthorized Access ");
+        next((0, Error_1.default)("No token", 401));
     }
 });
 exports.verifyAccessToken = verifyAccessToken;

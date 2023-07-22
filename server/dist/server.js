@@ -25,15 +25,15 @@ const PORT = process.env.PORT || 5000;
 const user_1 = __importDefault(require("./routes/user"));
 const student_1 = __importDefault(require("./routes/student"));
 //use cors
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ credentials: true, origin: true }));
 //use express json
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
-//use global middlewares
-app.use(customError_1.default);
 //routes
 app.use("/auth", user_1.default);
 app.use("/api/v1", student_1.default);
+//use error middleware
+app.use(customError_1.default);
 //connect db and listen on port
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
