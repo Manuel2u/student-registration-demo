@@ -2,7 +2,7 @@ import axios from "axios";
 import { logout } from "../../utils/auth";
 import { toast } from "react-hot-toast";
 
-axios.defaults.baseURL = "https://student-registrationv-c10ffde07470.herokuapp.com/";
+axios.defaults.baseURL = "https://student-reg-demo.azurewebsites.net/";
 
 axios.interceptors.response.use(
   (resp) => resp,
