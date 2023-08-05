@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-import { RouterConfig } from "./navigation/router-config";
+import { CenterLoader } from "./utils/loaders";
+import { router } from "./navigation/router-config";
+import { RouterProvider } from "react-router-dom";
 
 function App() {
   return (
@@ -32,7 +34,9 @@ function App() {
           },
         }}
       />
-      <RouterConfig />
+      <Suspense fallback={CenterLoader()}>
+        <RouterProvider router={router} />
+      </Suspense>
     </>
   );
 }

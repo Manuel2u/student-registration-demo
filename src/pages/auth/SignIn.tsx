@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useUserAuth } from "../../services/context";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { DASHBOARD } from "../../constants/page-paths";
 import { login } from "../../utils/auth";
@@ -22,7 +22,7 @@ export default function SignIn() {
     setPassword(value);
   };
 
-  const { push } = useHistory();
+  const navigate = useNavigate();
   const { state, dispatch } = useUserAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +35,7 @@ export default function SignIn() {
         console.log(user);
         dispatch({ type: "LOGIN_USER", user: user });
         console.log(state);
-        push(DASHBOARD);
+        navigate("/");
         toast.success(`Signed in as ${user.username}`);
         console.log(state);
       });
@@ -44,7 +44,7 @@ export default function SignIn() {
       setLoading(false);
       console.log(error);
       toast.error(` ${error.response.data.err}`);
-      push("/login");
+      navigate("/login");
     }
   };
 

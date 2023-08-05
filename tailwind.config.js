@@ -3,13 +3,6 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    screens: {
-      sm: "340px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1280px",
-      "2xl": "1536px",
-    },
     extend: {
       colors: {
         primary: "#3748A0",
@@ -21,7 +14,7 @@ module.exports = {
         skills: "#2065D129",
         projects: "#161616",
         darknight: "#252A2F",
-        icon : "#9E9E9E"
+        icon: "#9E9E9E",
       },
       fontFamily: {
         dodoo: ["Sacramento"],

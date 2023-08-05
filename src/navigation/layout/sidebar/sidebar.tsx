@@ -1,17 +1,16 @@
-import { Fragment, SetStateAction,  useState } from "react";
-
+import { Fragment, SetStateAction, useState } from "react";
+import { CiSettings } from "react-icons/ci";
+import { FiLogOut } from "react-icons/fi";
 import { Dialog, Transition } from "@headlessui/react";
-import { UserCircleIcon, HomeIcon, XIcon } from "@heroicons/react/outline";
 import { FC } from "react";
 import { Dispatch } from "react";
 import { classNames } from "../../../helpers/classnames";
-import { CREATE_STUDENT, DASHBOARD } from "../../../constants/page-paths";
 import { LogoutModal } from "../logout/index";
-import { CiSettings } from "react-icons/ci";
-import { FiLogOut } from "react-icons/fi";
 
-import { Link, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useUserAuth } from "../../../services/context";
+import navigation from "../../navigation";
+import { XIcon } from "@heroicons/react/outline";
 
 const logo = require("../../../assets/uglogo.png");
 const male = require("../../../assets/male.jpeg");
@@ -22,34 +21,10 @@ interface Props {
 }
 
 const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
-  const { pathname } = useLocation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
-  const [navigation, setNavigation] = useState([
-    {
-      name: "Dashboard",
-      href: DASHBOARD,
-      icon: HomeIcon,
-      current: true,
-    },
-    {
-      name: "Students",
-      href: CREATE_STUDENT,
-      icon: UserCircleIcon,
-      current: false,
-    },
-  ]);
 
   const { state } = useUserAuth();
   console.log(state);
-
-  const handleItemClick = (index: any) => {
-    const updatedNavItems = navigation.map((item, i) => ({
-      ...item,
-      current: i === index,
-    }));
-    setNavigation(updatedNavItems);
-  };
 
   return (
     <>
@@ -112,32 +87,56 @@ const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
               </div>
               <div className="mt-5 flex-1 h-0 overflow-y-auto">
-                <nav className="px-2">
-                  <div className="space-y-2">
+                <nav className="px-3 mt-8 flex flex-col justify-between h-full">
+                  <div className="space-y-5">
                     {navigation.map((item) => (
-                      <Link
+                      <NavLink
                         key={item.name}
                         to={item.href}
                         className={classNames(
-                          pathname === item.href
-                            ? "bg-gray-100 text-gray-900"
-                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-50",
-                          "group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md"
+                          " group hover:text-white nav hover:bg-primary",
+                          "group flex items-center px-2 py-3 text-base leading-5 font-medium rounded-md"
                         )}
-                        aria-current={item.current ? "page" : undefined}
                       >
                         <item.icon
                           className={classNames(
-                            pathname === item.href
-                              ? "text-gray-500"
-                              : "text-gray-400 group-hover:text-gray-500",
+                            " group-hover:text-white",
                             "mr-3 flex-shrink-0 h-5 w-5"
                           )}
-                          aria-hidden="true"
                         />
                         {item.name}
-                      </Link>
+                      </NavLink>
                     ))}
+                  </div>
+                  <div className=" flex flex-col gap-y-7 mb-10">
+                    <div>
+                      <NavLink
+                        className="flex items-center nav py-2 pl-2 rounded-md gap-x-3"
+                        to="/settings"
+                      >
+                        <CiSettings color="#9E9E9E" size={27} />
+                        <p className="font-normal">Settings</p>
+                      </NavLink>
+                    </div>
+                    <div className="bg-gray-500 h-[0.5px] w-auto"></div>
+                    <div className="flex items-center gap-x-3">
+                      <img
+                        src={male}
+                        className="w-10 h-10 rounded-full border-[1.5px]"
+                        alt="profile"
+                      />
+                      <div>
+                        <p className="text-sm">{state.user?.username}</p>
+                        {typeof state.user?.email === "string" && (
+                          <p className="text-sm text-gray-600">
+                            {state.user.email.substring(0, 17)}...
+                          </p>
+                        )}
+                      </div>
+                      <div onClick={() => setShowLogoutModal(true)}>
+                        <FiLogOut size={20} color="#9E9E9E" />
+                      </div>
+                    </div>
                   </div>
                 </nav>
               </div>
@@ -168,36 +167,36 @@ const SideBar: FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
             {/* User account dropdown */}
 
             {/* Navigation */}
-            <nav className="px-3 mt-8 flex flex-col justify-between h-screen">
+            <nav className="px-3 mt-8 flex flex-col justify-between h-full">
               <div className="space-y-5">
                 {navigation.map((item) => (
-                  <Link
-                    onClick={handleItemClick}
+                  <NavLink
                     key={item.name}
                     to={item.href}
                     className={classNames(
-                      pathname === item.href
-                        ? "bg-primary text-white font-medium"
-                        : "text-gray-900  font-normal ",
-                      "group flex items-center  px-2 py-3 text-sm  rounded-md"
+                      " group hover:text-white nav hover:bg-primary",
+                      "group flex items-center px-2 py-3 text-base leading-5 font-medium rounded-md"
                     )}
-                    aria-current={item.current ? "page" : undefined}
                   >
                     <item.icon
                       className={classNames(
-                        item.current ? "text-gray-900" : "text-white ",
-                        "mr-2 flex-shrink-0 h-5 w-6"
+                        " group-hover:text-white",
+                        "mr-3 flex-shrink-0 h-5 w-5"
                       )}
-                      aria-hidden="true"
                     />
                     {item.name}
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
               <div className=" flex flex-col gap-y-7 mb-4">
-                <div className="flex items-center gap-x-3">
-                  <CiSettings color="#9E9E9E" size={27} />
-                  <p className="text-gray-900 font-normal">Settings</p>
+                <div>
+                  <NavLink
+                    className="flex items-center nav py-2 pl-2 rounded-md gap-x-3"
+                    to="/settings"
+                  >
+                    <CiSettings color="#9E9E9E" size={27} />
+                    <p className="font-normal">Settings</p>
+                  </NavLink>
                 </div>
                 <div className="bg-gray-500 h-[0.5px] w-auto"></div>
                 <div className="flex items-center gap-x-3">

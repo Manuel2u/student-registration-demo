@@ -5,12 +5,10 @@ import { SearchIcon } from "@heroicons/react/solid";
 import { classNames } from "../../helpers/classnames";
 import { SideBar } from "./sidebar";
 import { CenterLoader } from "../../utils/loaders/index";
-import { RouteProp } from "../types";
-import routes from "../routes";
-import ProtectedRoute from "../../services/ProtectedRoutes";
+
 import { useUserAuth } from "../../services/context";
 import { getUser } from "../../utils/auth";
-import { useHistory, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import auth from "../../services/cookie-config";
 import { AxiosHeaders } from "axios";
 import Axios from "axios";
@@ -30,20 +28,6 @@ console.log(token);
 ] = `Bearer ${token}`;
 
 const Layout = () => {
-  const location = useLocation();
-  const history = useHistory();
-
-  useEffect(() => {
-    const foundRoute = routes.find((route) => {
-      return route.path === location.pathname;
-    });
-
-    if (!foundRoute) {
-      history.push("/notfound");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { dispatch } = useUserAuth();
 
@@ -226,17 +210,7 @@ const Layout = () => {
         </div>
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
           <Suspense fallback={LoadingComponent()}>
-            {routes?.map((route: RouteProp, i: number) => {
-              return (
-                <Fragment key={i}>
-                  <ProtectedRoute
-                    component={route.component}
-                    exact={route.exact}
-                    path={route.path}
-                  />
-                </Fragment>
-              );
-            })}
+            <Outlet />
           </Suspense>
         </main>
       </div>

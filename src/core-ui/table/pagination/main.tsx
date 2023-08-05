@@ -7,7 +7,7 @@ import {
   useState,
   useEffect,
 } from "react";
-import { useLocation, useHistory } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useQueryStrings } from "../../../hooks";
 import { addpageToRoute } from "./broker";
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const Pagination: FC<Props> = ({ total, limit, setSkip, skip }) => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const query = useQueryStrings();
   const [page, setPage] = useState(0);
@@ -63,7 +63,7 @@ const Pagination: FC<Props> = ({ total, limit, setSkip, skip }) => {
                   ) {
                     setSkip(enteredPage * limit);
                     setPage(enteredPage);
-                    push(addpageToRoute(location, enteredPage.toString()));
+                    navigate(addpageToRoute(location, enteredPage.toString()));
                   } else {
                     return toast.error(
                       "Please enter a value between 1 and " +
@@ -86,7 +86,7 @@ const Pagination: FC<Props> = ({ total, limit, setSkip, skip }) => {
               let newPage = page - 1;
               setPage(newPage);
               setEnteredPage(newPage);
-              push(addpageToRoute(location, newPage.toString()));
+              navigate(addpageToRoute(location, newPage.toString()));
             }}
             disabled={skip === 0}
             className={`inline-flex items-center w-24 px-3 py-3 border text-sm leading-4 bg-primary font-medium rounded-none text-white ${
@@ -118,7 +118,7 @@ const Pagination: FC<Props> = ({ total, limit, setSkip, skip }) => {
               setSkip(page * limit);
               setPage(newPage);
               setEnteredPage(newPage);
-              push(addpageToRoute(location, newPage.toString()));
+              navigate(addpageToRoute(location, newPage.toString()));
             }}
             disabled={skip + limit >= total}
             className={`inline-flex items-center ml-3 w-24 justify-center py-3 border bg-primary text-sm leading-4 font-medium rounded-none text-white ${

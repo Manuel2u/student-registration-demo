@@ -96,9 +96,9 @@ function Create() {
     <>
       <div className="flex">
         <div></div>
-        <div className="flex flex-col w-screen">
+        <div className="flex flex-col h-screen w-screen">
           <Navbar2 />
-          <div className="bg-gray-100 h-[50.5vw] pb-1 px-5">
+          <div className="bg-gray-100 h-full pb-1 px-5">
             <div className="flex justify-between items-center mt-5 px-5">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
