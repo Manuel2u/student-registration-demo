@@ -27,7 +27,6 @@ export default function SignIn() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // setError("");
     setLoading(true);
 
     try {
@@ -35,7 +34,7 @@ export default function SignIn() {
         console.log(user);
         dispatch({ type: "LOGIN_USER", user: user });
         console.log(state);
-        navigate("/");
+        navigate(DASHBOARD);
         toast.success(`Signed in as ${user.username}`);
         console.log(state);
       });

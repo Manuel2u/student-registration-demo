@@ -1,14 +1,18 @@
 import React, { Fragment } from "react";
 import {
-  Navigate,
   Route,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
 import NotFound from "../components/NotFound";
-import { LOGIN, MAIN_LAYOUT } from "../constants/page-paths";
-import { ProtectedRoute } from "../services/ProtectedRoutes";
-import auth from "../services/cookie-config";
+import {
+  CREATE_STUDENT,
+  DASHBOARD,
+  LOGIN,
+  MAIN_LAYOUT,
+  SETTINGS,
+} from "../constants/page-paths";
+import ProtectedRoutes from "../services/ProtectedRoutes";
 
 const SignIn = React.lazy(() => import("../pages/auth/SignIn"));
 const Student = React.lazy(() => import("../pages/Create-User"));
@@ -16,44 +20,32 @@ const Dashboard = React.lazy(() => import("../pages/dashboard/Dashboard"));
 const Settings = React.lazy(() => import("../pages/settings/Settings"));
 const Layout = React.lazy(() => import("../navigation/layout/main-layout"));
 
-const isUserAuthenticated = () => {
-  // Implement your authentication logic here. For example:
-  const token = auth.getCipher();
-  return !!token; // Return true if the user is authenticated, otherwise false.
-};
-
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Fragment>
       <Route path={MAIN_LAYOUT} element={<Layout />}>
         <Route
-          index
+          path={DASHBOARD}
           element={
-            isUserAuthenticated() ? (
+            <ProtectedRoutes>
               <Dashboard />
-            ) : (
-              <Navigate to={LOGIN} replace />
-            )
+            </ProtectedRoutes>
           }
         />
         <Route
-          path="/create-student"
+          path={CREATE_STUDENT}
           element={
-            isUserAuthenticated() ? (
+            <ProtectedRoutes>
               <Student />
-            ) : (
-              <Navigate to={LOGIN} replace />
-            )
+            </ProtectedRoutes>
           }
         />
         <Route
-          path="/settings"
+          path={SETTINGS}
           element={
-            isUserAuthenticated() ? (
+            <ProtectedRoutes>
               <Settings />
-            ) : (
-              <Navigate to={LOGIN} replace />
-            )
+            </ProtectedRoutes>
           }
         />
       </Route>

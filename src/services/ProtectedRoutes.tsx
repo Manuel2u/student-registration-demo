@@ -1,15 +1,15 @@
-import React, { Fragment } from "react";
-import { Navigate, Route } from "react-router-dom";
+import React from "react";
+import { Navigate } from "react-router-dom";
 import auth from "./cookie-config";
 
-export const ProtectedRoute = ({ element: Element, ...rest }: any) => {
-  const token = auth.getCipher();
-  return (
-    <Fragment>
-      <Route
-        {...rest}
-        element={token ? <Element /> : <Navigate to="/signin" />}
-      />
-    </Fragment>
-  );
+type Props = {
+  children: React.ReactNode;
 };
+
+export default function ProtectedRoutes({ children }: Props) {
+  const token = auth.getCipher();
+  if (token) {
+    return <>{children}</>;
+  }
+  return <Navigate to="/login" />;
+}

@@ -6,7 +6,6 @@ export const DASHBOARD = "/";
 
 export const MAIN_LAYOUT = "/";
 
- 
-export const CREATE_STUDENT = "/create-student"; 
+export const SETTINGS = "/settings";
 
-
+export const CREATE_STUDENT = "/create-student";
